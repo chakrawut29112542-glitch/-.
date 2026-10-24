@@ -1,0 +1,803 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ระบบจัดทำใบเบิกค่าใช้จ่ายในการเดินทางไปราชการ แบบ 8708">
+<title>ระบบใบเบิกค่าเดินทางไปราชการ | แบบ 8708</title>
+
+<style>
+:root{
+  --navy:#17365d;
+  --blue:#2563eb;
+  --bg:#eef2f7;
+  --line:#d7dee8;
+  --muted:#64748b;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:"Noto Sans Thai","Leelawadee UI","Tahoma",sans-serif;
+  background:var(--bg);
+  color:#172033;
+}
+
+/* HEADER */
+
+header{
+  background:linear-gradient(135deg,#17365d,#24568f);
+  color:white;
+  padding:18px 22px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  box-shadow:0 3px 15px #0003;
+}
+
+header .title{
+  font-size:20px;
+  font-weight:800;
+}
+
+header .sub{
+  font-size:12px;
+  opacity:.9;
+  margin-top:3px;
+}
+
+/* LAYOUT */
+
+.layout{
+  max-width:1600px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:460px 1fr;
+  gap:16px;
+  padding:16px;
+}
+
+.card{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:13px;
+  box-shadow:0 2px 12px #0000000d;
+}
+
+.form{
+  padding:15px;
+  max-height:calc(100vh - 120px);
+  overflow:auto;
+}
+
+h2{
+  font-size:17px;
+  color:var(--navy);
+  margin:0 0 12px;
+}
+
+h3{
+  font-size:14px;
+  color:var(--navy);
+  margin:0 0 10px;
+}
+
+.section{
+  padding:13px 0;
+  border-top:1px solid #e5e7eb;
+}
+
+.section:first-of-type{
+  border-top:0;
+  padding-top:0;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+label{
+  display:block;
+  font-size:11.5px;
+  font-weight:800;
+  margin:0 0 4px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  font:inherit;
+  font-size:13px;
+  border:1px solid #cbd5e1;
+  border-radius:7px;
+  padding:8px;
+  background:#fff;
+  color:#111827;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  outline:2px solid #93c5fd;
+  border-color:#2563eb;
+}
+
+textarea{
+  min-height:65px;
+  resize:vertical;
+}
+
+.small{
+  font-size:11px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.money{
+  font-variant-numeric:tabular-nums;
+}
+
+.total{
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+  border-radius:9px;
+  padding:10px;
+  margin-top:10px;
+}
+
+.total strong{
+  color:var(--navy);
+}
+
+/* BUTTON */
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:14px;
+}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 12px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.primary{
+  background:var(--navy);
+  color:#fff;
+}
+
+.blue{
+  background:var(--blue);
+  color:#fff;
+}
+
+.light{
+  background:#e8eef7;
+  color:var(--navy);
+}
+
+.danger{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+
+/* PREVIEW */
+
+.preview{
+  padding:14px;
+  background:#596579;
+  border-radius:13px;
+  overflow:auto;
+}
+
+.toolbar{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+  color:white;
+  font-size:12px;
+}
+
+.badge{
+  background:#ffffff22;
+  border:1px solid #ffffff44;
+  padding:6px 9px;
+  border-radius:20px;
+}
+
+.page{
+  position:relative;
+  width:793px;
+  height:1120px;
+  margin:0 auto 20px;
+  background:#fff center/100% 100% no-repeat;
+  box-shadow:0 5px 18px #0005;
+}
+
+.overlay{
+  position:absolute;
+  white-space:pre-wrap;
+  overflow:hidden;
+  color:#111;
+  line-height:1.12;
+  font-family:"Noto Sans Thai","Leelawadee UI","Tahoma",sans-serif;
+}
+
+.error{
+  border-color:#ef4444!important;
+  background:#fff7f7!important;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1050px){
+
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .form{
+    max-height:none;
+  }
+
+  .preview{
+    order:-1;
+  }
+
+  .page{
+    transform-origin:top left;
+  }
+}
+
+@media(max-width:700px){
+
+  .grid{
+    grid-template-columns:1fr;
+  }
+
+  .actions{
+    grid-template-columns:1fr;
+  }
+
+  .page{
+    transform:scale(.72);
+    transform-origin:top left;
+    margin-bottom:-300px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="title">
+ระบบจัดทำใบเบิกค่าใช้จ่ายในการเดินทางไปราชการ
+</div>
+
+<div class="sub">
+แบบ 8708 ส่วนที่ 1 และส่วนที่ 2 • กรอกข้อมูล → ตรวจสอบ → ออก PDF
+</div>
+
+</header>
+
+
+<div class="layout">
+
+<!-- =========================
+     FORM
+========================= -->
+
+<section class="card form">
+
+<h2>ข้อมูลใบเบิก</h2>
+
+
+<!-- 1 -->
+
+<div class="section">
+
+<h3>1) ข้อมูลสัญญายืมเงิน</h3>
+
+<div class="grid">
+
+<div>
+<label>สัญญายืมเงินเลขที่</label>
+<input id="loanNo">
+</div>
+
+<div>
+<label>วันที่</label>
+<input id="loanDate" type="date">
+</div>
+
+<div>
+<label>ชื่อผู้ยืม</label>
+<input id="borrower">
+</div>
+
+<div>
+<label>จำนวนเงิน (บาท)</label>
+<input
+ id="loanAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+</div>
+</div>
+
+
+<!-- 2 -->
+
+<div class="section">
+
+<h3>2) ส่วนราชการ / เรื่อง / คำสั่ง</h3>
+
+<div class="grid">
+
+<div>
+<label>ที่ทำการ</label>
+<input id="office">
+</div>
+
+<div>
+<label>วันที่ออกใบเบิก</label>
+<input id="claimDate" type="date">
+</div>
+
+<div>
+<label>เรียน</label>
+<input id="to">
+</div>
+
+<div>
+<label>คำสั่ง / บันทึกที่</label>
+<input id="orderNo">
+</div>
+
+<div>
+<label>ลงวันที่</label>
+<input id="orderDate" type="date">
+</div>
+
+<div>
+<label>ชื่อผู้เดินทาง</label>
+<input id="traveler">
+</div>
+
+<div>
+<label>ตำแหน่ง</label>
+<input id="position">
+</div>
+
+<div>
+<label>สังกัด</label>
+<input id="department">
+</div>
+
+</div>
+
+<div style="margin-top:9px">
+
+<label>
+รายละเอียดการเดินทาง / ภารกิจ
+</label>
+
+<textarea id="mission"></textarea>
+
+</div>
+
+</div>
+
+
+<!-- 3 -->
+
+<div class="section">
+
+<h3>3) วันและเวลาเดินทาง</h3>
+
+<div class="grid">
+
+<div>
+<label>เดินทางออกจาก</label>
+<input id="from">
+</div>
+
+<div>
+<label>เดินทางไป</label>
+<input id="toPlace">
+</div>
+
+<div>
+<label>วันออกเดินทาง</label>
+<input id="depDate" type="date">
+</div>
+
+<div>
+<label>เวลาออกเดินทาง</label>
+<input id="depTime" type="time">
+</div>
+
+<div>
+<label>วันกลับถึง</label>
+<input id="retDate" type="date">
+</div>
+
+<div>
+<label>เวลากลับถึง</label>
+<input id="retTime" type="time">
+</div>
+
+<div>
+<label>รวมเวลา (วัน)</label>
+<input
+ id="travelDays"
+ type="number"
+ step="0.5"
+ readonly>
+</div>
+
+<div>
+<label>รวมเวลา (ชั่วโมง)</label>
+<input
+ id="travelHours"
+ type="number"
+ step="1"
+ readonly>
+</div>
+
+</div>
+
+<p class="small">
+ระบบคำนวณระยะเวลาจากวัน–เวลาออกและกลับถึง
+</p>
+
+</div>
+
+
+<!-- 4 -->
+
+<div class="section">
+
+<h3>4) รายการค่าใช้จ่าย</h3>
+
+<div class="grid">
+
+<div>
+<label>ค่าเบี้ยเลี้ยง ประเภท</label>
+<input
+ id="perDiemType"
+ placeholder="เช่น เหมาจ่าย">
+</div>
+
+<div>
+<label>จำนวนวัน</label>
+<input
+ id="perDiemDays"
+ type="number"
+ step="0.5">
+</div>
+
+<div>
+<label>อัตรา/วัน (บาท)</label>
+<input
+ id="perDiemRate"
+ type="number"
+ step="0.01">
+</div>
+
+<div>
+<label>ค่าเบี้ยเลี้ยงรวม</label>
+<input
+ id="perDiemAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+
+<div>
+<label>ค่าที่พัก ประเภท</label>
+<input
+ id="hotelType"
+ placeholder="เช่น จ่ายจริง">
+</div>
+
+<div>
+<label>จำนวนคืน/วัน</label>
+<input
+ id="hotelDays"
+ type="number"
+ step="0.5">
+</div>
+
+<div>
+<label>อัตรา/คืน (บาท)</label>
+<input
+ id="hotelRate"
+ type="number"
+ step="0.01">
+</div>
+
+<div>
+<label>ค่าที่พักรวม</label>
+<input
+ id="hotelAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+
+<div>
+<label>ค่าพาหนะ</label>
+<input
+ id="transportAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+<div>
+<label>ค่าใช้จ่ายอื่น</label>
+<input
+ id="otherAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+<div>
+<label>จำนวนหลักฐาน (ฉบับ)</label>
+<input
+ id="attachments"
+ type="number">
+</div>
+
+<div>
+<label>รวมทั้งสิ้น</label>
+<input
+ id="totalAmount"
+ type="number"
+ step="0.01"
+ class="money">
+</div>
+
+</div>
+
+
+<div class="total">
+
+<div>
+<strong>ยอดรวม:</strong>
+
+<span id="totalDisplay">
+0.00 บาท
+</span>
+
+</div>
+
+<div>
+
+<strong>ตัวอักษร:</strong>
+
+<span id="amountWordsDisplay">
+ศูนย์บาทถ้วน
+</span>
+
+</div>
+
+</div>
+
+<p class="small">
+
+อัตราเบี้ยเลี้ยงและค่าที่พักให้ผู้ใช้งานกรอกตามสิทธิ
+และระเบียบที่ใช้บังคับ
+
+</p>
+
+</div>
+
+
+<!-- 5 -->
+
+<div class="section">
+
+<h3>5) ผู้ลงนาม / การเงิน</h3>
+
+<div class="grid">
+
+<div>
+<label>ผู้ขอรับเงิน</label>
+<input id="claimant">
+</div>
+
+<div>
+<label>ตำแหน่งผู้ขอรับเงิน</label>
+<input id="claimantPos">
+</div>
+
+<div>
+<label>ผู้ตรวจสอบ</label>
+<input id="checker">
+</div>
+
+<div>
+<label>ตำแหน่งผู้ตรวจสอบ</label>
+<input id="checkerPos">
+</div>
+
+<div>
+<label>วันที่ตรวจสอบ</label>
+<input id="checkDate" type="date">
+</div>
+
+<div>
+<label>ผู้อนุมัติ</label>
+<input id="approver">
+</div>
+
+<div>
+<label>ตำแหน่งผู้อนุมัติ</label>
+<input id="approverPos">
+</div>
+
+<div>
+<label>วันที่อนุมัติ</label>
+<input id="approveDate" type="date">
+</div>
+
+<div>
+<label>ผู้รับเงิน</label>
+<input id="receiver">
+</div>
+
+<div>
+<label>วันที่รับเงิน</label>
+<input id="receiveDate" type="date">
+</div>
+
+<div>
+<label>ผู้จ่ายเงิน</label>
+<input id="payer">
+</div>
+
+<div>
+<label>วันที่จ่ายเงิน</label>
+<input id="payDate" type="date">
+</div>
+
+<div>
+<label>สัญญายืมเงินเลขที่</label>
+<input id="loanNo2">
+</div>
+
+<div>
+<label>วันที่สัญญายืมเงิน</label>
+<input id="loanDate2" type="date">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- 6 -->
+
+<div class="section">
+
+<h3>6) หมายเหตุ</h3>
+
+<textarea
+ id="remark"
+ placeholder="รายละเอียดเพิ่มเติม">
+</textarea>
+
+</div>
+
+
+<!-- BUTTON -->
+
+<div class="actions">
+
+<button
+ class="blue"
+ onclick="makePDF()">
+📄 ออก PDF 2 หน้า
+</button>
+
+<button
+ class="primary"
+ onclick="validateAndPreview()">
+✓ ตรวจสอบข้อมูล
+</button>
+
+<button
+ class="light"
+ onclick="saveData()">
+💾 บันทึกในเครื่อง
+</button>
+
+<button
+ class="light"
+ onclick="loadData()">
+↻ เรียกข้อมูล
+</button>
+
+<button
+ class="danger"
+ onclick="clearData()">
+ล้างข้อมูล
+</button>
+
+</div>
+
+
+<p id="status" class="small"></p>
+
+</section>
+
+
+<!-- =========================
+     PREVIEW
+========================= -->
+
+<section class="preview">
+
+<div class="toolbar">
+
+<span class="badge">
+ตัวอย่างเอกสาร A4
+</span>
+
+<span class="badge">
+หน้า 1 / 2
+</span>
+
+<span class="badge">
+แบบ 8708
+</span>
+
+</div>
+
+
+<!-- PAGE 1 -->
+
+<div
+ class="page"
+ id="page1"
+ style="background-image:url('form-page1.jpg')">
+</div>
+
+
+<!-- PAGE 2 -->
+
+<div
+ class="page"
+ id="page2"
+ style="background-image:url('form-page2.jpg')">
+</div>
+
+
+</section>
+
+</div>
+
+
+<!-- PDF LIBRARIES --
